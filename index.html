@@ -979,7 +979,7 @@
 
     <!-- ===== HALAL BANNER TOP ===== -->
     <div class="halal-top">
-        ☪ <span>HALAL</span> Все блюда сертифицированы
+        HALAL Все блюда сертифицированы
     </div>
 
     <!-- ===== HEADER ===== -->
@@ -1035,7 +1035,7 @@
         <!-- ===== СЭНДВИЧИ ===== -->
         <section class="category" data-category="sandwiches">
             <h2 class="category__title"><span>Сэндвичи и хот-доги</span></h2>
-            <div class="category__sub">⭐ Хит продаж</div>
+            <div class="category__sub">Хит продаж</div>
             <div class="products" id="products-sandwiches"></div>
         </section>
 
@@ -1066,7 +1066,7 @@
 
         <!-- ===== HALAL BANNER BOTTOM ===== -->
         <div class="halal-bottom">
-            ☪ <span>HALAL</span> Все блюда сертифицированы
+            HALAL Все блюда сертифицированы
         </div>
 
     </main>
@@ -1184,9 +1184,9 @@
 
         function getProductDisplayPrice(product) {
             if (product.price2) {
-                return `${product.price} / ${product.price2} ₽`;
+                return product.price + ' / ' + product.price2 + ' ₽';
             }
-            return `${product.price} ₽`;
+            return product.price + ' ₽';
         }
 
         function getProductImage(item) {
@@ -1194,20 +1194,20 @@
         }
 
         function renderProducts(categoryKey) {
-            const container = document.getElementById(`products-${categoryKey}`);
+            const container = document.getElementById('products-' + categoryKey);
             if (!container) return;
 
             const items = menuData[categoryKey] || [];
             container.innerHTML = items.map(item => {
                 const hasSize = !!item.price2;
                 const cartItem = cart[item.id];
-                const selectedSize = cartItem?.size || 'small';
+                const selectedSize = cartItem ? cartItem.size : 'small';
 
                 return `
                     <div class="product" data-id="${item.id}">
                         <div class="product__image">
-                            ${item.image ? `<img src="${item.image}" alt="${item.name}" loading="lazy">` : `<div class="placeholder">${item.name}</div>`}
-                            ${hasSize ? `<span class="product__badge">2 размера</span>` : ''}
+                            ${item.image ? '<img src="' + item.image + '" alt="' + item.name + '" loading="lazy">' : '<div class="placeholder">' + item.name + '</div>'}
+                            ${hasSize ? '<span class="product__badge">2 размера</span>' : ''}
                         </div>
                         <div class="product__body">
                             <div class="product__name">${item.name}</div>
@@ -1322,8 +1322,8 @@
                 badge.classList.add('hidden');
             }
 
-            document.getElementById('cartTotal').textContent = `${getTotalPrice()} ₽`;
-            document.getElementById('cartModalTotal').textContent = `${getTotalPrice()} ₽`;
+            document.getElementById('cartTotal').textContent = getTotalPrice() + ' ₽';
+            document.getElementById('cartModalTotal').textContent = getTotalPrice() + ' ₽';
 
             renderAllCategories();
             renderCartItems();
@@ -1334,7 +1334,7 @@
             const items = Object.values(cart);
 
             if (items.length === 0) {
-                container.innerHTML = `<div class="cart-modal__empty">Корзина пуста</div>`;
+                container.innerHTML = '<div class="cart-modal__empty">Корзина пуста</div>';
                 return;
             }
 
@@ -1343,11 +1343,11 @@
                 return `
                     <div class="cart-item">
                         <div class="cart-item__image">
-                            ${item.image ? `<img src="${item.image}" alt="${item.name}">` : ''}
+                            ${item.image ? '<img src="' + item.image + '" alt="' + item.name + '">' : ''}
                         </div>
                         <div class="cart-item__info">
                             <div class="cart-item__name">${item.name}</div>
-                            ${item.price2 ? `<div class="cart-item__size">${sizeLabel}</div>` : ''}
+                            ${item.price2 ? '<div class="cart-item__size">' + sizeLabel + '</div>' : ''}
                             <div class="cart-item__price">${item.price} ₽</div>
                         </div>
                         <div class="cart-item__qty">
@@ -1371,7 +1371,7 @@
 
                 const category = this.dataset.category;
                 document.querySelectorAll('.category').forEach(sec => sec.classList.remove('active'));
-                document.querySelector(`.category[data-category="${category}"]`).classList.add('active');
+                document.querySelector('.category[data-category="' + category + '"]').classList.add('active');
             });
         });
 
@@ -1384,7 +1384,7 @@
         document.getElementById('cartToggle').addEventListener('click', () => {
             overlay.classList.add('open');
             renderCartItems();
-            document.getElementById('cartModalTotal').textContent = `${getTotalPrice()} ₽`;
+            document.getElementById('cartModalTotal').textContent = getTotalPrice() + ' ₽';
             document.getElementById('orderStatus').className = 'cart-modal__status';
             document.getElementById('orderStatus').textContent = '';
         });
@@ -1428,19 +1428,19 @@
             status.className = 'cart-modal__status';
             status.textContent = '';
 
-            let orderText = '🛒 НОВЫЙ ЗАКАЗ\n\n';
-            orderText += `👤 Имя: ${name}\n`;
-            orderText += `📱 Телефон: ${phone}\n\n`;
-            orderText += `📋 Заказ:\n`;
+            let orderText = 'НОВЫЙ ЗАКАЗ\n\n';
+            orderText += 'Имя: ' + name + '\n';
+            orderText += 'Телефон: ' + phone + '\n\n';
+            orderText += 'Заказ:\n';
 
             Object.values(cart).forEach(item => {
                 const sizeLabel = item.size === 'large' ? ' (Большой)' : item.price2 ? ' (Маленький)' : '';
-                orderText += `• ${item.name}${sizeLabel} × ${item.quantity} = ${item.price * item.quantity} ₽\n`;
+                orderText += item.name + sizeLabel + ' x ' + item.quantity + ' = ' + (item.price * item.quantity) + ' ₽\n';
             });
 
-            orderText += `\n💰 Итого: ${getTotalPrice()} ₽`;
+            orderText += '\nИтого: ' + getTotalPrice() + ' ₽';
 
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            const url = 'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage';
             const body = JSON.stringify({
                 chat_id: TELEGRAM_CHAT_ID,
                 text: orderText,
@@ -1449,9 +1449,9 @@
 
             let success = false;
             const proxies = [
-                `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-                `https://corsproxy.io/?${encodeURIComponent(url)}`,
-                `https://cors-anywhere.herokuapp.com/${url}`
+                'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+                'https://corsproxy.io/?' + encodeURIComponent(url),
+                'https://cors-anywhere.herokuapp.com/' + url
             ];
 
             for (const proxy of proxies) {
@@ -1480,7 +1480,7 @@
 
             if (success) {
                 status.className = 'cart-modal__status success';
-                status.textContent = '✅ Заказ отправлен! Мы свяжемся с вами.';
+                status.textContent = 'Заказ отправлен! Мы свяжемся с вами.';
                 cart = {};
                 updateUI();
                 renderCartItems();
@@ -1490,7 +1490,7 @@
                 }, 2000);
             } else {
                 status.className = 'cart-modal__status error';
-                status.textContent = '❌ Ошибка отправки. Позвоните нам';
+                status.textContent = 'Ошибка отправки. Позвоните нам';
             }
 
             submitBtn.disabled = false;
