@@ -35,7 +35,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
             background: var(--olive-bg);
             color: var(--text);
-            line-height: 1.5;
+            line-height: 1.4;
             padding-bottom: 0;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
@@ -494,10 +494,10 @@
             border-radius: var(--radius) var(--radius) 0 0;
             max-width: 520px;
             width: 100%;
-            max-height: 94vh;
+            max-height: 92vh;
             display: flex;
             flex-direction: column;
-            padding: 20px 20px 24px;
+            padding: 16px 18px 18px;
             animation: slideCart 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.08);
         }
@@ -517,22 +517,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 16px;
+            padding-bottom: 12px;
             border-bottom: 2px solid var(--olive);
+            flex-shrink: 0;
         }
 
         .cart-modal__title {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 800;
             color: var(--olive-dark);
         }
 
         .cart-modal__close {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: rgba(90, 122, 74, 0.06);
-            font-size: 18px;
+            font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -546,29 +547,29 @@
         }
 
         .cart-modal__items {
-            flex: 1;
             overflow-y: auto;
-            padding: 12px 0 16px;
+            padding: 8px 0 10px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            max-height: 200px;
+            gap: 6px;
+            max-height: 140px;
+            flex-shrink: 0;
         }
 
         .cart-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 8px 12px;
+            gap: 10px;
+            padding: 6px 10px;
             background: rgba(90, 122, 74, 0.04);
             border-radius: var(--radius-sm);
             border: 1px solid rgba(90, 122, 74, 0.06);
         }
 
         .cart-item__image {
-            width: 44px;
-            height: 44px;
-            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
             overflow: hidden;
             flex-shrink: 0;
             background: #E8EBE4;
@@ -587,17 +588,17 @@
 
         .cart-item__name {
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--olive-dark);
         }
 
         .cart-item__size {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-muted);
         }
 
         .cart-item__price {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--olive);
             font-weight: 700;
         }
@@ -605,15 +606,15 @@
         .cart-item__qty {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .cart-item__qty button {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background: rgba(90, 122, 74, 0.06);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 400;
             display: flex;
             align-items: center;
@@ -628,18 +629,18 @@
 
         .cart-item__qty span {
             font-weight: 600;
-            font-size: 14px;
-            min-width: 18px;
+            font-size: 13px;
+            min-width: 16px;
             text-align: center;
             color: var(--olive-dark);
         }
 
         .cart-item__remove {
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
             opacity: 0.3;
             transition: var(--transition);
-            padding: 4px;
+            padding: 2px;
         }
 
         .cart-item__remove:active {
@@ -650,21 +651,23 @@
         .cart-modal__empty {
             text-align: center;
             color: var(--text-muted);
-            padding: 36px 0;
-            font-size: 14px;
+            padding: 20px 0;
+            font-size: 13px;
         }
 
         .cart-modal__footer {
             border-top: 2px solid var(--olive);
-            padding-top: 16px;
+            padding-top: 12px;
+            flex-shrink: 0;
+            overflow-y: auto;
         }
 
         .cart-modal__total {
             display: flex;
             justify-content: space-between;
             font-weight: 700;
-            font-size: 18px;
-            margin-bottom: 14px;
+            font-size: 17px;
+            margin-bottom: 10px;
             color: var(--olive-dark);
         }
 
@@ -676,16 +679,16 @@
         /* ===== ORDER TYPE ===== */
         .order-type {
             display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 8px;
         }
 
         .order-type__btn {
             flex: 1;
-            padding: 10px 0;
+            padding: 8px 0;
             border-radius: var(--radius-sm);
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             transition: var(--transition);
             border: 2px solid rgba(90, 122, 74, 0.15);
             background: var(--bg-card);
@@ -707,17 +710,17 @@
         .cart-modal__form {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .cart-modal__form input,
         .cart-modal__form textarea {
-            padding: 12px 16px;
+            padding: 8px 12px;
             border-radius: var(--radius-sm);
             background: rgba(90, 122, 74, 0.04);
             border: 2px solid rgba(90, 122, 74, 0.08);
             color: var(--text);
-            font-size: 14px;
+            font-size: 13px;
             transition: var(--transition);
             width: 100%;
             font-family: inherit;
@@ -737,19 +740,20 @@
 
         .cart-modal__form textarea {
             resize: vertical;
-            min-height: 50px;
+            min-height: 36px;
+            font-size: 12px;
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 6px;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .form-group.hidden {
@@ -760,16 +764,17 @@
         .cafe-info {
             background: rgba(90, 122, 74, 0.04);
             border-radius: var(--radius-sm);
-            padding: 12px 14px;
-            margin-bottom: 12px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
             border: 1px solid rgba(90, 122, 74, 0.06);
+            flex-shrink: 0;
         }
 
         .cafe-info__row {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
-            padding: 2px 0;
+            font-size: 11px;
+            padding: 1px 0;
             color: var(--text);
         }
 
@@ -786,35 +791,36 @@
             border-radius: var(--radius-sm);
             overflow: hidden;
             border: 2px solid rgba(90, 122, 74, 0.08);
-            margin: 4px 0 8px;
+            margin: 4px 0 6px;
         }
 
         .pickup-map iframe {
             width: 100%;
-            height: 200px;
+            height: 150px;
             display: block;
             border: none;
         }
 
         .pickup-map__label {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-muted);
             text-align: center;
-            padding: 4px 0 0;
+            padding: 2px 0 4px;
         }
 
         .cart-modal__submit {
-            padding: 14px;
+            padding: 12px;
             border-radius: var(--radius-sm);
             background: var(--olive);
             color: #fff;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 14px;
             transition: var(--transition);
             width: 100%;
             letter-spacing: 0.5px;
             border: 2px solid var(--olive);
             margin-top: 4px;
+            flex-shrink: 0;
         }
 
         .cart-modal__submit:active {
@@ -829,12 +835,12 @@
         }
 
         .cart-modal__status {
-            padding: 10px 14px;
+            padding: 8px 12px;
             border-radius: var(--radius-sm);
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             display: none;
-            margin-top: 6px;
+            margin-top: 4px;
         }
 
         .cart-modal__status.success {
@@ -955,7 +961,11 @@
             }
 
             .pickup-map iframe {
-                height: 220px;
+                height: 180px;
+            }
+
+            .cart-modal__items {
+                max-height: 160px;
             }
         }
 
@@ -1008,7 +1018,8 @@
             .cart-modal {
                 border-radius: var(--radius);
                 margin-bottom: 20px;
-                max-height: 88vh;
+                max-height: 85vh;
+                padding: 20px 24px 24px;
             }
 
             .cart-overlay {
@@ -1035,7 +1046,7 @@
             }
 
             .cart-modal__items {
-                max-height: 260px;
+                max-height: 200px;
             }
 
             .map-section iframe {
@@ -1043,7 +1054,12 @@
             }
 
             .pickup-map iframe {
-                height: 250px;
+                height: 200px;
+            }
+
+            .cart-item__image {
+                width: 44px;
+                height: 44px;
             }
         }
 
@@ -1070,7 +1086,100 @@
             }
 
             .pickup-map iframe {
-                height: 280px;
+                height: 220px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cart-modal {
+                padding: 12px 14px 14px;
+                max-height: 94vh;
+            }
+
+            .cart-modal__items {
+                max-height: 100px;
+                padding: 4px 0 6px;
+                gap: 4px;
+            }
+
+            .cart-item {
+                padding: 4px 8px;
+                gap: 8px;
+            }
+
+            .cart-item__image {
+                width: 30px;
+                height: 30px;
+            }
+
+            .cart-item__name {
+                font-size: 11px;
+            }
+            .cart-item__price {
+                font-size: 10px;
+            }
+            .cart-item__qty button {
+                width: 20px;
+                height: 20px;
+                font-size: 11px;
+            }
+            .cart-item__qty span {
+                font-size: 11px;
+                min-width: 14px;
+            }
+            .cart-item__remove {
+                font-size: 11px;
+            }
+
+            .cart-modal__title {
+                font-size: 15px;
+            }
+            .cart-modal__total {
+                font-size: 15px;
+                margin-bottom: 6px;
+            }
+
+            .cafe-info {
+                padding: 4px 10px;
+                margin-bottom: 4px;
+            }
+            .cafe-info__row {
+                font-size: 10px;
+            }
+
+            .order-type__btn {
+                padding: 6px 0;
+                font-size: 12px;
+            }
+
+            .cart-modal__form input,
+            .cart-modal__form textarea {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            .cart-modal__form textarea {
+                min-height: 30px;
+                font-size: 11px;
+            }
+            .form-row {
+                gap: 4px;
+            }
+
+            .pickup-map iframe {
+                height: 120px;
+            }
+            .pickup-map__label {
+                font-size: 9px;
+            }
+
+            .cart-modal__submit {
+                padding: 10px;
+                font-size: 13px;
+            }
+
+            .cart-modal__status {
+                padding: 6px 10px;
+                font-size: 10px;
             }
         }
 
@@ -1133,7 +1242,11 @@
             }
 
             .pickup-map iframe {
-                height: 150px;
+                height: 100px;
+            }
+
+            .cart-modal__items {
+                max-height: 80px;
             }
         }
     </style>
@@ -1260,8 +1373,6 @@
                 <div class="cafe-info">
                     <div class="cafe-info__row">
                         <strong>Amur Burgers</strong>
-                    </div>
-                    <div class="cafe-info__row">
                         <span>ул. Кешокова, 160, Нальчик</span>
                     </div>
                     <div class="cafe-info__row">
@@ -1285,26 +1396,10 @@
                             <input type="text" id="orderFloor" placeholder="Этаж">
                         </div>
                         <input type="text" id="orderEntrance" placeholder="Подъезд">
-                        <textarea id="orderComment" placeholder="Комментарий к адресу (домофон, ориентиры и т.п.)" rows="2"></textarea>
+                        <textarea id="orderComment" placeholder="Комментарий к адресу" rows="2"></textarea>
                     </div>
 
                     <div id="pickupFields" class="form-group hidden">
-                        <div class="cafe-info" style="margin-top:0;">
-                            <div class="cafe-info__row">
-                                <strong>Адрес самовывоза:</strong>
-                                <span>ул. Кешокова, 160, Нальчик</span>
-                            </div>
-                            <div class="cafe-info__row">
-                                <strong>Время работы:</strong>
-                                <span>10:00 — 23:00</span>
-                            </div>
-                            <div class="cafe-info__row">
-                                <strong>Перерыв (пт):</strong>
-                                <span>12:00 — 13:30</span>
-                            </div>
-                        </div>
-
-                        <!-- ===== КАРТА В БЛОКЕ "С СОБОЙ" ===== -->
                         <div class="pickup-map">
                             <iframe
                                 src="https://yandex.ru/map-widget/v1/?ll=43.594117,43.488945&z=17&pt=43.594117,43.488945~red"
@@ -1312,8 +1407,7 @@
                                 loading="lazy">
                             </iframe>
                         </div>
-                        <div class="pickup-map__label">📍 Amur Burgers, ул. Кешокова, 160, Нальчик</div>
-
+                        <div class="pickup-map__label">📍 ул. Кешокова, 160, Нальчик</div>
                         <textarea id="orderPickupComment" placeholder="Комментарий к заказу" rows="2"></textarea>
                     </div>
 
@@ -1326,7 +1420,7 @@
 
     <script>
         // ============================================================
-        //  ДАННЫЕ МЕНЮ
+        //  ДАННЫЕ МЕНЮ (полные данные из предыдущих версий)
         // ============================================================
         const menuData = {
             burgers: [
