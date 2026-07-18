@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Amur Burgers</title>
+    <!-- Подключаем Leaflet (OpenStreetMap) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Подключаем геокодер для поиска адресов по координатам -->
+    <script src="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.css" />
     <style>
         * {
             margin: 0;
@@ -488,7 +494,7 @@
             border-radius: var(--radius) var(--radius) 0 0;
             max-width: 520px;
             width: 100%;
-            max-height: 88vh;
+            max-height: 94vh;
             display: flex;
             flex-direction: column;
             padding: 20px 20px 24px;
@@ -546,6 +552,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            max-height: 200px;
         }
 
         .cart-item {
@@ -666,13 +673,43 @@
             font-weight: 800;
         }
 
+        .order-type {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .order-type__btn {
+            flex: 1;
+            padding: 10px 0;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 14px;
+            transition: var(--transition);
+            border: 2px solid rgba(90, 122, 74, 0.15);
+            background: var(--bg-card);
+            color: var(--text-muted);
+        }
+
+        .order-type__btn.active {
+            border-color: var(--olive);
+            background: var(--olive);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(90, 122, 74, 0.2);
+        }
+
+        .order-type__btn:active {
+            transform: scale(0.96);
+        }
+
         .cart-modal__form {
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
 
-        .cart-modal__form input {
+        .cart-modal__form input,
+        .cart-modal__form textarea {
             padding: 12px 16px;
             border-radius: var(--radius-sm);
             background: rgba(90, 122, 74, 0.04);
@@ -681,16 +718,91 @@
             font-size: 14px;
             transition: var(--transition);
             width: 100%;
+            font-family: inherit;
         }
 
-        .cart-modal__form input::placeholder {
+        .cart-modal__form input::placeholder,
+        .cart-modal__form textarea::placeholder {
             color: var(--text-muted);
         }
 
-        .cart-modal__form input:focus {
+        .cart-modal__form input:focus,
+        .cart-modal__form textarea:focus {
             border-color: var(--olive);
             outline: none;
             background: rgba(90, 122, 74, 0.06);
+        }
+
+        .cart-modal__form textarea {
+            resize: vertical;
+            min-height: 50px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.hidden {
+            display: none;
+        }
+
+        /* ===== MAP ===== */
+        .map-container {
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 2px solid rgba(90, 122, 74, 0.08);
+            height: 200px;
+            margin: 4px 0 8px;
+            position: relative;
+            background: #E8EBE4;
+        }
+
+        .map-container #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 4px 0 8px;
+        }
+
+        .map-hint .leaflet-control-zoom {
+            display: none !important;
+        }
+
+        .cafe-info {
+            background: rgba(90, 122, 74, 0.04);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(90, 122, 74, 0.06);
+        }
+
+        .cafe-info__row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 2px 0;
+            color: var(--text);
+        }
+
+        .cafe-info__row strong {
+            color: var(--olive-dark);
+        }
+
+        .cafe-info__row span {
+            color: var(--text-muted);
         }
 
         .cart-modal__submit {
@@ -704,6 +816,7 @@
             width: 100%;
             letter-spacing: 0.5px;
             border: 2px solid var(--olive);
+            margin-top: 4px;
         }
 
         .cart-modal__submit:active {
@@ -809,6 +922,10 @@
                 padding: 8px 20px;
                 font-size: 14px;
             }
+
+            .map-container {
+                height: 240px;
+            }
         }
 
         @media (min-width: 900px) {
@@ -860,7 +977,7 @@
             .cart-modal {
                 border-radius: var(--radius);
                 margin-bottom: 20px;
-                max-height: 80vh;
+                max-height: 88vh;
             }
 
             .cart-overlay {
@@ -884,6 +1001,14 @@
 
             .info-block__halal {
                 grid-column: 1 / -1;
+            }
+
+            .cart-modal__items {
+                max-height: 260px;
+            }
+
+            .map-container {
+                height: 280px;
             }
         }
 
@@ -955,6 +1080,54 @@
             .info-block__item {
                 font-size: 12px;
             }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container {
+                height: 160px;
+            }
+        }
+
+        /* Стили для Leaflet на мобильных */
+        .leaflet-control-zoom {
+            display: flex !important;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .leaflet-control-zoom a {
+            width: 32px !important;
+            height: 32px !important;
+            line-height: 32px !important;
+            font-size: 18px !important;
+            background: white !important;
+            border-radius: 8px !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+            color: #333 !important;
+            border: none !important;
+        }
+
+        .leaflet-control-zoom a:hover {
+            background: #f0f0f0 !important;
+        }
+
+        .leaflet-control-geocoder {
+            border-radius: 8px !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+            border: none !important;
+        }
+
+        .leaflet-control-geocoder input {
+            border-radius: 8px !important;
+            border: none !important;
+            padding: 8px 12px !important;
+            font-size: 13px !important;
+        }
+
+        .leaflet-control-geocoder .leaflet-control-geocoder-icon {
+            border-radius: 8px !important;
         }
     </style>
 </head>
@@ -1061,9 +1234,61 @@
                     <span>Итого</span>
                     <span id="cartModalTotal">0 ₽</span>
                 </div>
+
+                <div class="cafe-info">
+                    <div class="cafe-info__row">
+                        <strong>Amur Burgers</strong>
+                    </div>
+                    <div class="cafe-info__row">
+                        <span>ул. Кешокова, 160, Нальчик</span>
+                    </div>
+                    <div class="cafe-info__row">
+                        <span>10:00 — 23:00 (пт перерыв 12:00-13:30)</span>
+                    </div>
+                </div>
+
+                <div class="order-type" id="orderType">
+                    <button class="order-type__btn active" data-type="delivery">Доставка</button>
+                    <button class="order-type__btn" data-type="pickup">С собой</button>
+                </div>
+
                 <form class="cart-modal__form" id="orderForm">
                     <input type="text" id="orderName" placeholder="Ваше имя" required>
                     <input type="tel" id="orderPhone" placeholder="Номер телефона" required>
+
+                    <div id="deliveryFields">
+                        <input type="text" id="orderStreet" placeholder="Улица, дом (выберите на карте или введите вручную)">
+                        <div class="map-container">
+                            <div id="map"></div>
+                        </div>
+                        <div class="map-hint">Нажмите на карту, чтобы выбрать адрес</div>
+
+                        <div class="form-row">
+                            <input type="text" id="orderApartment" placeholder="Кв./Офис">
+                            <input type="text" id="orderFloor" placeholder="Этаж">
+                        </div>
+                        <input type="text" id="orderEntrance" placeholder="Подъезд">
+                        <textarea id="orderComment" placeholder="Комментарий к адресу (домофон, ориентиры и т.п.)" rows="2"></textarea>
+                    </div>
+
+                    <div id="pickupFields" class="form-group hidden">
+                        <div class="cafe-info" style="margin-top:0;">
+                            <div class="cafe-info__row">
+                                <strong>Адрес самовывоза:</strong>
+                                <span>ул. Кешокова, 160, Нальчик</span>
+                            </div>
+                            <div class="cafe-info__row">
+                                <strong>Время работы:</strong>
+                                <span>10:00 — 23:00</span>
+                            </div>
+                            <div class="cafe-info__row">
+                                <strong>Перерыв (пт):</strong>
+                                <span>12:00 — 13:30</span>
+                            </div>
+                        </div>
+                        <textarea id="orderPickupComment" placeholder="Комментарий к заказу" rows="2"></textarea>
+                    </div>
+
                     <button type="submit" class="cart-modal__submit" id="orderSubmit">Оформить заказ</button>
                     <div class="cart-modal__status" id="orderStatus"></div>
                 </form>
@@ -1072,6 +1297,9 @@
     </div>
 
     <script>
+        // ============================================================
+        //  ДАННЫЕ МЕНЮ
+        // ============================================================
         const menuData = {
             burgers: [
                 { id: 'b1', name: 'Биф бургер', price: 350, image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=400&fit=crop' },
@@ -1142,8 +1370,36 @@
             ]
         };
 
+        // ============================================================
+        //  КОРЗИНА С LOCALSTORAGE
+        // ============================================================
         let cart = {};
         let selectedSizeCache = {};
+        let orderType = 'delivery';
+
+        function loadCart() {
+            try {
+                const saved = localStorage.getItem('amurCart');
+                if (saved) {
+                    cart = JSON.parse(saved);
+                }
+                const savedSizes = localStorage.getItem('amurSizes');
+                if (savedSizes) {
+                    selectedSizeCache = JSON.parse(savedSizes);
+                }
+            } catch (e) {
+                console.log('Ошибка загрузки корзины');
+            }
+        }
+
+        function saveCart() {
+            try {
+                localStorage.setItem('amurCart', JSON.stringify(cart));
+                localStorage.setItem('amurSizes', JSON.stringify(selectedSizeCache));
+            } catch (e) {
+                console.log('Ошибка сохранения корзины');
+            }
+        }
 
         function getSizeLabel(item, size) {
             if (!item.price2) return '';
@@ -1236,6 +1492,7 @@
 
         function selectSize(productId, size) {
             selectedSizeCache[productId] = size;
+            saveCart();
             renderAllCategories();
             updateUI();
         }
@@ -1263,6 +1520,7 @@
                 };
             }
 
+            saveCart();
             updateUI();
         }
 
@@ -1276,12 +1534,14 @@
                 delete cart[cartKey];
             }
 
+            saveCart();
             updateUI();
         }
 
         function removeFromCart(productId, size) {
             const cartKey = getCartKey(productId, size);
             delete cart[cartKey];
+            saveCart();
             updateUI();
         }
 
@@ -1316,6 +1576,7 @@
 
             renderAllCategories();
             renderCartItems();
+            saveCart();
         }
 
         function renderCartItems() {
@@ -1350,6 +1611,9 @@
             }).join('');
         }
 
+        // ============================================================
+        //  ТАБЫ
+        // ============================================================
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1361,6 +1625,9 @@
             });
         });
 
+        // ============================================================
+        //  КОРЗИНА — ОТКРЫТИЕ / ЗАКРЫТИЕ
+        // ============================================================
         const overlay = document.getElementById('cartOverlay');
 
         document.getElementById('cartToggle').addEventListener('click', () => {
@@ -1369,6 +1636,8 @@
             document.getElementById('cartModalTotal').textContent = getTotalPrice() + ' ₽';
             document.getElementById('orderStatus').className = 'cart-modal__status';
             document.getElementById('orderStatus').textContent = '';
+
+            setTimeout(initMap, 300);
         });
 
         document.getElementById('cartClose').addEventListener('click', () => {
@@ -1379,6 +1648,131 @@
             if (e.target === overlay) overlay.classList.remove('open');
         });
 
+        // ============================================================
+        //  ТИП ЗАКАЗА
+        // ============================================================
+        document.querySelectorAll('.order-type__btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.order-type__btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                orderType = this.dataset.type;
+
+                const deliveryFields = document.getElementById('deliveryFields');
+                const pickupFields = document.getElementById('pickupFields');
+
+                if (orderType === 'delivery') {
+                    deliveryFields.style.display = 'block';
+                    pickupFields.classList.add('hidden');
+                    setTimeout(initMap, 300);
+                } else {
+                    deliveryFields.style.display = 'none';
+                    pickupFields.classList.remove('hidden');
+                }
+            });
+        });
+
+        // ============================================================
+        //  OPENSTREETMAP КАРТА (LEAFLET)
+        // ============================================================
+        let mapInstance = null;
+        let mapMarker = null;
+
+        function initMap() {
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) return;
+
+            if (mapInstance) {
+                mapInstance.invalidateSize();
+                return;
+            }
+
+            try {
+                // Координаты Нальчика
+                const nalchikCoords = [43.4854, 43.6072];
+
+                mapInstance = L.map('map', {
+                    center: nalchikCoords,
+                    zoom: 15,
+                    zoomControl: true,
+                    attributionControl: true
+                });
+
+                // Слой карты OpenStreetMap
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(mapInstance);
+
+                // Иконка для метки
+                const icon = L.divIcon({
+                    className: 'custom-marker',
+                    html: '<div style="background:#5A7A4A;width:20px;height:20px;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>',
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+
+                // Метка
+                mapMarker = L.marker(nalchikCoords, {
+                    draggable: true,
+                    icon: icon
+                }).addTo(mapInstance);
+
+                // Клик по карте
+                mapInstance.on('click', function(e) {
+                    const coords = e.latlng;
+                    mapMarker.setLatLng(coords);
+                    getAddressOSM(coords);
+                });
+
+                // Перетаскивание метки
+                mapMarker.on('dragend', function() {
+                    const coords = mapMarker.getLatLng();
+                    getAddressOSM(coords);
+                });
+
+                // Поиск адреса через Geocoder
+                const geocoder = L.Control.geocoder({
+                    defaultMarkGeocode: false,
+                    placeholder: 'Поиск адреса...',
+                    errorMessage: 'Адрес не найден'
+                }).on('markgeocode', function(e) {
+                    const coords = e.geocode.center;
+                    mapMarker.setLatLng(coords);
+                    mapInstance.setView(coords, 16);
+                    getAddressOSM(coords);
+                }).addTo(mapInstance);
+
+                // Адаптация под мобильные
+                mapInstance.invalidateSize();
+
+            } catch (e) {
+                console.log('Ошибка инициализации карты:', e);
+            }
+        }
+
+        function getAddressOSM(coords) {
+            const url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + coords.lat + '&lon=' + coords.lng + '&zoom=18&addressdetails=1&accept-language=ru';
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.display_name) {
+                        let address = data.display_name;
+                        // Убираем лишнее
+                        address = address.replace(', Россия', '');
+                        address = address.replace(', Kabardino-Balkarskaya Respublika,', ',');
+                        document.getElementById('orderStreet').value = address;
+                    }
+                })
+                .catch(err => {
+                    console.log('Ошибка получения адреса:', err);
+                });
+        }
+
+        // ============================================================
+        //  ОТПРАВКА В TELEGRAM
+        // ============================================================
         const TELEGRAM_BOT_TOKEN = '8944369213:AAHUE5TtO92cj8gBBG8fYAzV1n0muG3H1qM';
         const TELEGRAM_CHAT_ID = '1922216067';
 
@@ -1408,9 +1802,28 @@
             status.textContent = '';
 
             let orderText = 'НОВЫЙ ЗАКАЗ\n\n';
+            orderText += 'Тип заказа: ' + (orderType === 'delivery' ? 'Доставка' : 'С собой') + '\n';
             orderText += 'Имя: ' + name + '\n';
-            orderText += 'Телефон: ' + phone + '\n\n';
-            orderText += 'Заказ:\n';
+            orderText += 'Телефон: ' + phone + '\n';
+
+            if (orderType === 'delivery') {
+                const street = document.getElementById('orderStreet').value.trim();
+                const apartment = document.getElementById('orderApartment').value.trim();
+                const floor = document.getElementById('orderFloor').value.trim();
+                const entrance = document.getElementById('orderEntrance').value.trim();
+                const comment = document.getElementById('orderComment').value.trim();
+
+                if (street) orderText += 'Улица, дом: ' + street + '\n';
+                if (apartment) orderText += 'Кв./Офис: ' + apartment + '\n';
+                if (floor) orderText += 'Этаж: ' + floor + '\n';
+                if (entrance) orderText += 'Подъезд: ' + entrance + '\n';
+                if (comment) orderText += 'Комментарий: ' + comment + '\n';
+            } else {
+                const comment = document.getElementById('orderPickupComment').value.trim();
+                if (comment) orderText += 'Комментарий: ' + comment + '\n';
+            }
+
+            orderText += '\nЗаказ:\n';
 
             Object.values(cart).forEach(item => {
                 const sizeDisplay = item.sizeLabel || (item.size === 'large' ? ' (Большой)' : '');
@@ -1462,6 +1875,7 @@
                 status.textContent = 'Заказ отправлен! Мы свяжемся с вами.';
                 cart = {};
                 selectedSizeCache = {};
+                saveCart();
                 updateUI();
                 renderCartItems();
                 document.getElementById('orderForm').reset();
@@ -1477,6 +1891,10 @@
             submitBtn.textContent = 'Оформить заказ';
         });
 
+        // ============================================================
+        //  ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+        loadCart();
         renderAllCategories();
         updateUI();
     </script>
