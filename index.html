@@ -185,7 +185,7 @@
         }
 
         /* ===== CATEGORY TABS ===== */
-        .tabs {
+        .tabs-wrapper {
             position: sticky;
             top: 68px;
             z-index: 99;
@@ -193,12 +193,17 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             padding: 12px 20px 14px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .tabs {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             gap: 8px;
             overflow-x: auto;
             scrollbar-width: none;
             -ms-overflow-style: none;
-            border-bottom: 1px solid var(--glass-border);
         }
 
         .tabs::-webkit-scrollbar {
@@ -301,7 +306,10 @@
             display: flex;
             flex-direction: column;
             box-shadow: var(--shadow);
-            backdrop-filter: blur(4px);
+            cursor: pointer;
+            position: relative;
+            transform: translateZ(0);
+            will-change: transform;
         }
 
         .product:active {
@@ -343,6 +351,20 @@
             color: var(--text-muted);
             font-size: 14px;
             font-weight: 500;
+        }
+
+        .product__badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--turquoise);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .product__body {
@@ -478,6 +500,262 @@
             font-weight: 600;
             font-size: 16px;
             min-width: 24px;
+            text-align: center;
+            color: var(--cream);
+        }
+
+        /* ===== FULLSCREEN PRODUCT OVERLAY ===== */
+        .product-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .product-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .product-overlay__content {
+            background: var(--graphite-card);
+            border-radius: var(--radius);
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 0;
+            box-shadow: var(--shadow-hover);
+            border: 1px solid var(--glass-border);
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .product-overlay.open .product-overlay__content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .product-overlay__image {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #1E2128;
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .product-overlay__image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-overlay__image .placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1E2128, #2A2D36);
+            color: var(--text-muted);
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .product-overlay__close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #fff;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .product-overlay__close:active {
+            transform: scale(0.88);
+        }
+
+        .product-overlay__body {
+            padding: 24px 24px 28px;
+        }
+
+        .product-overlay__name {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--cream);
+            margin-bottom: 4px;
+        }
+
+        .product-overlay__price {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--amber);
+            margin-bottom: 16px;
+        }
+
+        .product-overlay__price small {
+            font-weight: 400;
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+
+        .product-overlay__ingredients {
+            background: var(--glass-bg);
+            border-radius: var(--radius-sm);
+            padding: 16px 18px;
+            margin-bottom: 16px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .product-overlay__ingredients-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .product-overlay__ingredients-list {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .product-overlay__ingredients-list span {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 2px 12px;
+            border-radius: 50px;
+            margin: 2px 4px 2px 0;
+            font-size: 13px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .product-overlay__actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .product-overlay__btn {
+            flex: 1;
+            padding: 14px 0;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 15px;
+            transition: var(--transition);
+            text-align: center;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: var(--glass-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .product-overlay__btn:active {
+            transform: scale(0.94);
+        }
+
+        .product-overlay__btn.primary {
+            background: linear-gradient(135deg, var(--amber), var(--amber-dark));
+            color: var(--graphite);
+            border-color: var(--amber);
+            box-shadow: 0 4px 24px rgba(240, 160, 69, 0.25);
+        }
+
+        .product-overlay__btn.primary:active {
+            transform: scale(0.94);
+            box-shadow: 0 2px 12px rgba(240, 160, 69, 0.15);
+        }
+
+        .product-overlay__btn.in-cart {
+            background: var(--turquoise);
+            color: #fff;
+            border-color: var(--turquoise);
+            box-shadow: 0 4px 20px rgba(44, 182, 176, 0.2);
+        }
+
+        .product-overlay__size-select {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .product-overlay__size-btn {
+            flex: 1;
+            padding: 10px 0;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            background: var(--glass-bg);
+            color: var(--text-secondary);
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .product-overlay__size-btn.active {
+            background: var(--turquoise);
+            color: #fff;
+            border-color: var(--turquoise);
+            box-shadow: 0 4px 16px rgba(44, 182, 176, 0.25);
+        }
+
+        .product-overlay__size-btn:active {
+            transform: scale(0.94);
+        }
+
+        .product-overlay__qty-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .product-overlay__qty-control button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            font-weight: 400;
+            font-size: 22px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .product-overlay__qty-control button:active {
+            transform: scale(0.88);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .product-overlay__qty-control span {
+            font-weight: 600;
+            font-size: 20px;
+            min-width: 32px;
             text-align: center;
             color: var(--cream);
         }
@@ -708,7 +986,6 @@
             font-weight: 800;
         }
 
-        /* ===== ORDER TYPE ===== */
         .order-type {
             display: flex;
             gap: 8px;
@@ -738,7 +1015,6 @@
             transform: scale(0.96);
         }
 
-        /* ===== FORM ===== */
         .cart-modal__form {
             display: flex;
             flex-direction: column;
@@ -792,7 +1068,6 @@
             display: none;
         }
 
-        /* ===== CAFE INFO ===== */
         .cafe-info {
             background: var(--glass-bg);
             border-radius: var(--radius-sm);
@@ -818,7 +1093,6 @@
             color: var(--text-muted);
         }
 
-        /* ===== MAP IN PICKUP ===== */
         .pickup-map {
             border-radius: var(--radius-sm);
             overflow: hidden;
@@ -935,7 +1209,6 @@
             margin: 4px 0;
         }
 
-        /* ===== MAP SECTION ===== */
         .map-section {
             max-width: 1200px;
             margin: 30px auto 0;
@@ -1060,9 +1333,8 @@
                 align-items: center;
             }
 
-            .tabs {
+            .tabs-wrapper {
                 padding: 14px 36px 16px;
-                gap: 10px;
             }
 
             .tab-btn {
@@ -1286,6 +1558,22 @@
             .products {
                 gap: 12px;
             }
+
+            .product-overlay__body {
+                padding: 18px 18px 22px;
+            }
+
+            .product-overlay__name {
+                font-size: 20px;
+            }
+
+            .product-overlay__price {
+                font-size: 18px;
+            }
+
+            .product-overlay__ingredients-list {
+                font-size: 13px;
+            }
         }
 
         @media (max-width: 380px) {
@@ -1371,17 +1659,19 @@
         </button>
     </header>
 
-    <!-- ===== TABS ===== -->
-    <nav class="tabs" id="tabs">
-        <button class="tab-btn active" data-category="burgers">Бургеры</button>
-        <button class="tab-btn" data-category="tacos">Такос</button>
-        <button class="tab-btn" data-category="shawarma">Шаурма</button>
-        <button class="tab-btn" data-category="sandwiches">Сэндвичи</button>
-        <button class="tab-btn" data-category="snacks">Снеки</button>
-        <button class="tab-btn" data-category="drinks">Напитки</button>
-        <button class="tab-btn" data-category="sauces">Соусы</button>
-        <button class="tab-btn" data-category="addons">Добавки</button>
-    </nav>
+    <!-- ===== CATEGORY TABS ===== -->
+    <div class="tabs-wrapper">
+        <nav class="tabs" id="tabs">
+            <button class="tab-btn active" data-category="burgers">Бургеры</button>
+            <button class="tab-btn" data-category="tacos">Такос</button>
+            <button class="tab-btn" data-category="shawarma">Шаурма</button>
+            <button class="tab-btn" data-category="sandwiches">Сэндвичи</button>
+            <button class="tab-btn" data-category="snacks">Снеки</button>
+            <button class="tab-btn" data-category="drinks">Напитки</button>
+            <button class="tab-btn" data-category="sauces">Соусы</button>
+            <button class="tab-btn" data-category="addons">Добавки</button>
+        </nav>
+    </div>
 
     <!-- ===== MAIN ===== -->
     <main class="main" id="main">
@@ -1455,6 +1745,37 @@
 
     </main>
 
+    <!-- ===== FULLSCREEN PRODUCT OVERLAY ===== -->
+    <div class="product-overlay" id="productOverlay">
+        <div class="product-overlay__content" id="productOverlayContent">
+            <div class="product-overlay__image" id="overlayImage">
+                <img src="" alt="" id="overlayImg">
+                <button class="product-overlay__close" id="overlayClose">✕</button>
+            </div>
+            <div class="product-overlay__body">
+                <div class="product-overlay__name" id="overlayName"></div>
+                <div class="product-overlay__price" id="overlayPrice"></div>
+
+                <div class="product-overlay__ingredients">
+                    <div class="product-overlay__ingredients-title">Состав</div>
+                    <div class="product-overlay__ingredients-list" id="overlayIngredients"></div>
+                </div>
+
+                <div id="overlaySizeContainer"></div>
+
+                <div class="product-overlay__qty-control">
+                    <button onclick="updateOverlayQty(-1)">−</button>
+                    <span id="overlayQty">1</span>
+                    <button onclick="updateOverlayQty(1)">+</button>
+                </div>
+
+                <div class="product-overlay__actions">
+                    <button class="product-overlay__btn primary" id="overlayAddBtn">В корзину</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== CART MODAL ===== -->
     <div class="cart-overlay" id="cartOverlay">
         <div class="cart-modal" id="cartModal">
@@ -1521,118 +1842,109 @@
 
     <script>
         // ============================================================
-        //  ДАННЫЕ МЕНЮ
+        //  ДАННЫЕ МЕНЮ С СОСТАВОМ
         // ============================================================
         const menuData = {
             burgers: [
-                { id: 'b1', name: 'Биф бургер', price: 350, image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=400&fit=crop' },
-                { id: 'b2', name: 'Чикен бургер', price: 300, image: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=400&h=400&fit=crop' },
-                { id: 'b3', name: 'Двойной бургер', price: 550, image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=400&h=400&fit=crop' },
-                { id: 'b4', name: 'Мини-биф бургер', price: 280, image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=400&h=400&fit=crop' },
-                { id: 'b5', name: 'Мини-чикен бургер', price: 250, image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&h=400&fit=crop' }
+                { id: 'b1', name: 'Биф бургер', price: 350, ingredients: 'Говяжья котлета, сыр чеддер, салат айсберг, помидор, лук, соус BBQ, булочка бриошь', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=400&fit=crop' },
+                { id: 'b2', name: 'Чикен бургер', price: 300, ingredients: 'Куриная котлета, сыр гауда, салат романо, помидор, лук, соус цезарь, булочка с кунжутом', image: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=400&h=400&fit=crop' },
+                { id: 'b3', name: 'Двойной бургер', price: 550, ingredients: 'Две говяжьи котлеты, двойной сыр чеддер, салат айсберг, помидор, лук, маринованные огурцы, соус гриль', image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=400&h=400&fit=crop' },
+                { id: 'b4', name: 'Мини-биф бургер', price: 280, ingredients: 'Говяжья котлета, сыр, салат, помидор, соус горчичный', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=400&h=400&fit=crop' },
+                { id: 'b5', name: 'Мини-чикен бургер', price: 250, ingredients: 'Куриная котлета, сыр, салат, соус кисло-сладкий', image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&h=400&fit=crop' }
             ],
             tacos: [
-                { id: 't1', name: 'Такос с курицей', price: 300, price2: 350, image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a14711?w=400&h=400&fit=crop' },
-                { id: 't2', name: 'Такос с наггетсами', price: 300, price2: 350, image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a14711?w=400&h=400&fit=crop' },
-                { id: 't3', name: 'Такос с фаршем', price: 350, price2: 400, image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a14711?w=400&h=400&fit=crop' },
-                { id: 't4', name: 'Такос с сосисками', price: 300, price2: 350, image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a14711?w=400&h=400&fit=crop' },
-                { id: 't5', name: 'Такос с курицей XXL', price: 450, image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a14711?w=400&h=400&fit=crop' }
+                { id: 't1', name: 'Такос с курицей', price: 300, price2: 350, ingredients: 'Куриное филе, салат, помидоры, соус, сыр, тортилья', image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a14711?w=400&h=400&fit=crop' },
+                { id: 't2', name: 'Такос с наггетсами', price: 300, price2: 350, ingredients: 'Наггетсы, салат, помидоры, соус, сыр, тортилья', image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a14711?w=400&h=400&fit=crop' },
+                { id: 't3', name: 'Такос с фаршем', price: 350, price2: 400, ingredients: 'Говяжий фарш, салат, помидоры, соус, сыр, тортилья', image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a14711?w=400&h=400&fit=crop' },
+                { id: 't4', name: 'Такос с сосисками', price: 300, price2: 350, ingredients: 'Сосиски, салат, помидоры, соус, сыр, тортилья', image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a14711?w=400&h=400&fit=crop' },
+                { id: 't5', name: 'Такос с курицей XXL', price: 450, ingredients: 'Куриное филе, салат, помидоры, соус, сыр, тортилья XL', image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a14711?w=400&h=400&fit=crop' }
             ],
             shawarma: [
-                { id: 's1', name: 'Шаурма с курицей', price: 200, price2: 250, image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=400&fit=crop' },
-                { id: 's2', name: 'Шаурма с сосисками', price: 200, price2: 250, image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=400&fit=crop' },
-                { id: 's3', name: 'Шаурма с фаршем', price: 250, price2: 350, image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=400&fit=crop' },
-                { id: 's4', name: 'Цезарь ролл', price: 200, price2: 250, image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=400&fit=crop' },
-                { id: 's5', name: 'Гиро в булке', price: 300, image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=400&fit=crop' },
-                { id: 's6', name: 'Гиро в лаваше', price: 250, price2: 300, image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=400&fit=crop' }
+                { id: 's1', name: 'Шаурма с курицей', price: 200, price2: 250, ingredients: 'Куриное филе, капуста, морковь, огурцы, соус, лаваш', image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=400&fit=crop' },
+                { id: 's2', name: 'Шаурма с сосисками', price: 200, price2: 250, ingredients: 'Сосиски, капуста, морковь, огурцы, соус, лаваш', image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=400&fit=crop' },
+                { id: 's3', name: 'Шаурма с фаршем', price: 250, price2: 350, ingredients: 'Говяжий фарш, капуста, морковь, огурцы, соус, лаваш', image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=400&fit=crop' },
+                { id: 's4', name: 'Цезарь ролл', price: 200, price2: 250, ingredients: 'Курица, салат романо, помидоры, соус цезарь, пармезан, лаваш', image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=400&fit=crop' },
+                { id: 's5', name: 'Гиро в булке', price: 300, ingredients: 'Куриное филе, картофель, салат, помидоры, соус, булка', image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=400&fit=crop' },
+                { id: 's6', name: 'Гиро в лаваше', price: 250, price2: 300, ingredients: 'Куриное филе, картофель, салат, помидоры, соус, лаваш', image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&h=400&fit=crop' }
             ],
             sandwiches: [
-                { id: 'sw1', name: 'Сэндвич куриный', price: 350, image: 'https://images.unsplash.com/photo-1553909489-cd47e0907980?w=400&h=400&fit=crop' },
-                { id: 'sw2', name: 'Сэндвич с фаршем', price: 400, image: 'https://images.unsplash.com/photo-1553909489-cd47e0907980?w=400&h=400&fit=crop' },
-                { id: 'sw3', name: 'Фирменный хот-дог', price: 200, image: 'https://images.unsplash.com/photo-1613338439351-c7b7b3ae1d0c?w=400&h=400&fit=crop' }
+                { id: 'sw1', name: 'Сэндвич куриный', price: 350, ingredients: 'Куриное филе, салат, помидоры, бекон, соус, тостовый хлеб', image: 'https://images.unsplash.com/photo-1553909489-cd47e0907980?w=400&h=400&fit=crop' },
+                { id: 'sw2', name: 'Сэндвич с фаршем', price: 400, ingredients: 'Говяжий фарш, салат, помидоры, бекон, соус, тостовый хлеб', image: 'https://images.unsplash.com/photo-1553909489-cd47e0907980?w=400&h=400&fit=crop' },
+                { id: 'sw3', name: 'Фирменный хот-дог', price: 200, ingredients: 'Сосиска, горчица, кетчуп, лук, булочка', image: 'https://images.unsplash.com/photo-1613338439351-c7b7b3ae1d0c?w=400&h=400&fit=crop' }
             ],
             snacks: [
-                { id: 'n1', name: 'Наггетсы 6 шт.', price: 180, image: 'https://images.unsplash.com/photo-1562967916-eb82221d1d2f?w=400&h=400&fit=crop' },
-                { id: 'n2', name: 'Наггетсы 9 шт.', price: 250, image: 'https://images.unsplash.com/photo-1562967916-eb82221d1d2f?w=400&h=400&fit=crop' },
-                { id: 'n3', name: 'Стрипсы 6 шт.', price: 250, image: 'https://images.unsplash.com/photo-1562967916-eb82221d1d2f?w=400&h=400&fit=crop' },
-                { id: 'n4', name: 'Стрипсы 9 шт.', price: 350, image: 'https://images.unsplash.com/photo-1562967916-eb82221d1d2f?w=400&h=400&fit=crop' },
-                { id: 'n5', name: 'Острые крылышки 6 шт.', price: 350, image: 'https://images.unsplash.com/photo-1562967916-eb82221d1d2f?w=400&h=400&fit=crop' },
-                { id: 'n6', name: 'Острые крылышки 10 шт.', price: 600, image: 'https://images.unsplash.com/photo-1562967916-eb82221d1d2f?w=400&h=400&fit=crop' },
-                { id: 'n7', name: 'Картофель фри', price: 150, image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&h=400&fit=crop' },
-                { id: 'n8', name: 'Картофель по-деревенски', price: 180, image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&h=400&fit=crop' }
+                { id: 'n1', name: 'Наггетсы 6 шт.', price: 180, ingredients: 'Куриные наггетсы в хрустящей панировке', image: 'https://images.unsplash.com/photo-1562967916-eb82221d1d2f?w=400&h=400&fit=crop' },
+                { id: 'n2', name: 'Наггетсы 9 шт.', price: 250, ingredients: 'Куриные наггетсы в хрустящей панировке', image: 'https://images.unsplash.com/photo-1562967916-eb82221d1d2f?w=400&h=400&fit=crop' },
+                { id: 'n3', name: 'Стрипсы 6 шт.', price: 250, ingredients: 'Куриные стрипсы в хрустящей панировке', image: 'https://images.unsplash.com/photo-1562967916-eb82221d1d2f?w=400&h=400&fit=crop' },
+                { id: 'n4', name: 'Стрипсы 9 шт.', price: 350, ingredients: 'Куриные стрипсы в хрустящей панировке', image: 'https://images.unsplash.com/photo-1562967916-eb82221d1d2f?w=400&h=400&fit=crop' },
+                { id: 'n5', name: 'Острые крылышки 6 шт.', price: 350, ingredients: 'Куриные крылышки в остром соусе', image: 'https://images.unsplash.com/photo-1562967916-eb82221d1d2f?w=400&h=400&fit=crop' },
+                { id: 'n6', name: 'Острые крылышки 10 шт.', price: 600, ingredients: 'Куриные крылышки в остром соусе', image: 'https://images.unsplash.com/photo-1562967916-eb82221d1d2f?w=400&h=400&fit=crop' },
+                { id: 'n7', name: 'Картофель фри', price: 150, ingredients: 'Картофель, соль, специи', image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&h=400&fit=crop' },
+                { id: 'n8', name: 'Картофель по-деревенски', price: 180, ingredients: 'Картофель с кожурой, соль, специи, розмарин', image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&h=400&fit=crop' }
             ],
             drinks: [
-                { id: 'd1', name: 'Бабугент', price: 60, image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
-                { id: 'd2', name: 'Палли', price: 100, image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
-                { id: 'd3', name: 'Lit Energy', price: 120, image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
-                { id: 'd4', name: 'Flash', price: 100, image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
-                { id: 'd5', name: 'Adrenaline', price: 150, image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
-                { id: 'd6', name: 'Кинза', price: 120, image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
-                { id: 'd7', name: 'Добрый (ж/б)', price: 100, image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
-                { id: 'd8', name: 'Добрый 1 л', price: 120, image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
-                { id: 'd9', name: 'Сок 1 л', price: 120, image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
-                { id: 'd10', name: 'Груша (стекло)', price: 80, image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
-                { id: 'd11', name: 'Чай', price: 50, image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
-                { id: 'd12', name: 'Кофе', price: 50, image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' }
+                { id: 'd1', name: 'Бабугент', price: 60, ingredients: 'Газированный напиток, 0.5 л', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
+                { id: 'd2', name: 'Палли', price: 100, ingredients: 'Газированный напиток, 0.5 л', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
+                { id: 'd3', name: 'Lit Energy', price: 120, ingredients: 'Энергетический напиток, 0.45 л', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
+                { id: 'd4', name: 'Flash', price: 100, ingredients: 'Энергетический напиток, 0.45 л', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
+                { id: 'd5', name: 'Adrenaline', price: 150, ingredients: 'Энергетический напиток, 0.5 л', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
+                { id: 'd6', name: 'Кинза', price: 120, ingredients: 'Лимонад, 0.5 л', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
+                { id: 'd7', name: 'Добрый (ж/б)', price: 100, ingredients: 'Сок в жестяной банке, 0.33 л', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
+                { id: 'd8', name: 'Добрый 1 л', price: 120, ingredients: 'Сок, 1 л', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
+                { id: 'd9', name: 'Сок 1 л', price: 120, ingredients: 'Сок, 1 л', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
+                { id: 'd10', name: 'Груша (стекло)', price: 80, ingredients: 'Грушевый напиток в стекле, 0.5 л', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
+                { id: 'd11', name: 'Чай', price: 50, ingredients: 'Чай чёрный, 0.3 л', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' },
+                { id: 'd12', name: 'Кофе', price: 50, ingredients: 'Кофе чёрный, 0.2 л', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=400&fit=crop' }
             ],
             sauces: [
-                { id: 'sau1', name: 'Сырный', price: 50, image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
-                { id: 'sau2', name: 'Кетчуп', price: 50, image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
-                { id: 'sau3', name: 'Горчичный', price: 50, image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
-                { id: 'sau4', name: 'Барбекю', price: 50, image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
-                { id: 'sau5', name: 'Чили', price: 50, image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
-                { id: 'sau6', name: 'Фирменный зелёный', price: 50, image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
-                { id: 'sau7', name: 'Фирменный красный', price: 50, image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' }
+                { id: 'sau1', name: 'Сырный', price: 50, ingredients: 'Сырный соус', image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
+                { id: 'sau2', name: 'Кетчуп', price: 50, ingredients: 'Томатный кетчуп', image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
+                { id: 'sau3', name: 'Горчичный', price: 50, ingredients: 'Горчичный соус', image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
+                { id: 'sau4', name: 'Барбекю', price: 50, ingredients: 'Соус барбекю', image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
+                { id: 'sau5', name: 'Чили', price: 50, ingredients: 'Острый соус чили', image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
+                { id: 'sau6', name: 'Фирменный зелёный', price: 50, ingredients: 'Зелёный соус (петрушка, чеснок, масло)', image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
+                { id: 'sau7', name: 'Фирменный красный', price: 50, ingredients: 'Красный соус (томаты, перец, специи)', image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' }
             ],
             addons: [
-                { id: 'a1', name: 'Горчица', price: 30, image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
-                { id: 'a2', name: 'Халапеньо', price: 30, image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
-                { id: 'a3', name: 'Сыр', price: 70, image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
-                { id: 'a4', name: 'Курица', price: 80, image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
-                { id: 'a5', name: 'Котлета', price: 150, image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' }
+                { id: 'a1', name: 'Горчица', price: 30, ingredients: 'Горчица', image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
+                { id: 'a2', name: 'Халапеньо', price: 30, ingredients: 'Перец халапеньо', image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
+                { id: 'a3', name: 'Сыр', price: 70, ingredients: 'Сыр чеддер', image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
+                { id: 'a4', name: 'Курица', price: 80, ingredients: 'Куриное филе', image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' },
+                { id: 'a5', name: 'Котлета', price: 150, ingredients: 'Говяжья котлета', image: 'https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&h=400&fit=crop' }
             ]
         };
 
         // ============================================================
-        //  КОРЗИНА С LOCALSTORAGE
+        //  КОРЗИНА
         // ============================================================
         let cart = {};
         let selectedSizeCache = {};
         let orderType = 'delivery';
+        let overlayProduct = null;
+        let overlayQty = 1;
+        let overlaySelectedSize = 'small';
 
         function loadCart() {
             try {
                 const saved = localStorage.getItem('amurCart');
-                if (saved) {
-                    cart = JSON.parse(saved);
-                }
+                if (saved) cart = JSON.parse(saved);
                 const savedSizes = localStorage.getItem('amurSizes');
-                if (savedSizes) {
-                    selectedSizeCache = JSON.parse(savedSizes);
-                }
-            } catch (e) {
-                console.log('Ошибка загрузки корзины');
-            }
+                if (savedSizes) selectedSizeCache = JSON.parse(savedSizes);
+            } catch (e) {}
         }
 
         function saveCart() {
             try {
                 localStorage.setItem('amurCart', JSON.stringify(cart));
                 localStorage.setItem('amurSizes', JSON.stringify(selectedSizeCache));
-            } catch (e) {
-                console.log('Ошибка сохранения корзины');
-            }
+            } catch (e) {}
         }
 
         function getSizeLabel(item, size) {
             if (!item.price2) return '';
-            if (item.id.startsWith('t')) {
-                return size === 'large' ? 'Большой' : 'Средний';
-            }
+            if (item.id.startsWith('t')) return size === 'large' ? 'Большой' : 'Средний';
             if (item.id.startsWith('s')) {
-                if (item.name.includes('Гиро')) {
-                    return size === 'large' ? 'Большой' : 'Средний';
-                }
+                if (item.name.includes('Гиро')) return size === 'large' ? 'Большой' : 'Средний';
                 return size === 'large' ? 'Большая' : 'Средняя';
             }
             return size === 'large' ? 'Большой' : 'Маленький';
@@ -1640,29 +1952,21 @@
 
         function getSizeButtonLabel(item, size) {
             if (!item.price2) return '';
-            if (item.id.startsWith('t')) {
-                return size === 'large' ? 'Большой' : 'Средний';
-            }
+            if (item.id.startsWith('t')) return size === 'large' ? 'Большой' : 'Средний';
             if (item.id.startsWith('s')) {
-                if (item.name.includes('Гиро')) {
-                    return size === 'large' ? 'Большой' : 'Средний';
-                }
+                if (item.name.includes('Гиро')) return size === 'large' ? 'Большой' : 'Средний';
                 return size === 'large' ? 'Большая' : 'Средняя';
             }
             return size === 'large' ? 'Большой' : 'Маленький';
         }
 
         function getProductPrice(product, size) {
-            if (size === 'large' && product.price2) {
-                return product.price2;
-            }
+            if (size === 'large' && product.price2) return product.price2;
             return product.price || 0;
         }
 
         function getProductDisplayPrice(product) {
-            if (product.price2) {
-                return product.price + ' / ' + product.price2 + ' ₽';
-            }
+            if (product.price2) return product.price + ' / ' + product.price2 + ' ₽';
             return product.price + ' ₽';
         }
 
@@ -1682,20 +1986,15 @@
                 const itemInCart = cart[cartKey];
 
                 return `
-                    <div class="product" data-id="${item.id}">
+                    <div class="product" data-id="${item.id}" onclick="openProduct('${item.id}')">
                         <div class="product__image">
                             ${item.image ? '<img src="' + item.image + '" alt="' + item.name + '" loading="lazy">' : '<div class="placeholder">' + item.name + '</div>'}
+                            ${hasSize ? '<span class="product__badge">2 размера</span>' : ''}
                         </div>
                         <div class="product__body">
                             <div class="product__name">${item.name}</div>
                             <div class="product__price">${getProductDisplayPrice(item)}</div>
-                            ${hasSize ? `
-                                <div class="product__size-select">
-                                    <button class="product__size-btn ${selectedSize === 'small' ? 'active' : ''}" onclick="selectSize('${item.id}', 'small')">${getSizeButtonLabel(item, 'small')}</button>
-                                    <button class="product__size-btn ${selectedSize === 'large' ? 'active' : ''}" onclick="selectSize('${item.id}', 'large')">${getSizeButtonLabel(item, 'large')}</button>
-                                </div>
-                            ` : ''}
-                            <div class="product__actions" data-id="${item.id}">
+                            <div class="product__actions" onclick="event.stopPropagation();">
                                 ${itemInCart && itemInCart.quantity > 0 ? `
                                     <div class="product__qty-control">
                                         <button onclick="updateQuantity('${item.id}', '${selectedSize}', -1)">−</button>
@@ -1710,13 +2009,6 @@
                     </div>
                 `;
             }).join('');
-        }
-
-        function selectSize(productId, size) {
-            selectedSizeCache[productId] = size;
-            saveCart();
-            renderAllCategories();
-            updateUI();
         }
 
         function renderAllCategories() {
@@ -1751,10 +2043,7 @@
             if (!cart[cartKey]) return;
 
             cart[cartKey].quantity += delta;
-
-            if (cart[cartKey].quantity <= 0) {
-                delete cart[cartKey];
-            }
+            if (cart[cartKey].quantity <= 0) delete cart[cartKey];
 
             saveCart();
             updateUI();
@@ -1834,6 +2123,138 @@
         }
 
         // ============================================================
+        //  FULLSCREEN PRODUCT OVERLAY
+        // ============================================================
+        function openProduct(productId) {
+            const item = findProduct(productId);
+            if (!item) return;
+
+            overlayProduct = item;
+            overlayQty = 1;
+            overlaySelectedSize = selectedSizeCache[productId] || 'small';
+
+            const overlay = document.getElementById('productOverlay');
+            const img = document.getElementById('overlayImg');
+            const name = document.getElementById('overlayName');
+            const price = document.getElementById('overlayPrice');
+            const ingredients = document.getElementById('overlayIngredients');
+            const sizeContainer = document.getElementById('overlaySizeContainer');
+            const qtySpan = document.getElementById('overlayQty');
+
+            // Заполняем данные
+            img.src = item.image || '';
+            img.alt = item.name;
+            name.textContent = item.name;
+            price.textContent = getProductDisplayPrice(item);
+
+            // Ингредиенты
+            if (item.ingredients) {
+                const items = item.ingredients.split(',').map(i => i.trim());
+                ingredients.innerHTML = items.map(i => `<span>${i}</span>`).join('');
+            } else {
+                ingredients.innerHTML = '<span style="color:var(--text-muted)">Состав не указан</span>';
+            }
+
+            // Размеры
+            if (item.price2) {
+                sizeContainer.innerHTML = `
+                    <div class="product-overlay__size-select">
+                        <button class="product-overlay__size-btn ${overlaySelectedSize === 'small' ? 'active' : ''}" onclick="selectOverlaySize('small')">${getSizeButtonLabel(item, 'small')}</button>
+                        <button class="product-overlay__size-btn ${overlaySelectedSize === 'large' ? 'active' : ''}" onclick="selectOverlaySize('large')">${getSizeButtonLabel(item, 'large')}</button>
+                    </div>
+                `;
+            } else {
+                sizeContainer.innerHTML = '';
+            }
+
+            qtySpan.textContent = overlayQty;
+            updateOverlayButton();
+
+            // Открываем с анимацией
+            document.body.classList.add('no-scroll');
+            overlay.classList.add('open');
+        }
+
+        function selectOverlaySize(size) {
+            overlaySelectedSize = size;
+            const btns = document.querySelectorAll('.product-overlay__size-btn');
+            btns.forEach(btn => {
+                btn.classList.toggle('active', btn.textContent === getSizeButtonLabel(overlayProduct, size));
+            });
+            // Обновляем цену в оверлее
+            const price = document.getElementById('overlayPrice');
+            if (overlayProduct) {
+                price.textContent = getProductDisplayPrice(overlayProduct);
+            }
+            updateOverlayButton();
+        }
+
+        function updateOverlayQty(delta) {
+            overlayQty += delta;
+            if (overlayQty < 1) overlayQty = 1;
+            document.getElementById('overlayQty').textContent = overlayQty;
+            updateOverlayButton();
+        }
+
+        function updateOverlayButton() {
+            const btn = document.getElementById('overlayAddBtn');
+            const item = overlayProduct;
+            if (!item) return;
+
+            const cartKey = getCartKey(item.id, overlaySelectedSize);
+            const inCart = cart[cartKey];
+
+            if (inCart && inCart.quantity > 0) {
+                btn.textContent = `В корзине (${inCart.quantity})`;
+                btn.classList.add('in-cart');
+            } else {
+                btn.textContent = 'В корзину';
+                btn.classList.remove('in-cart');
+            }
+        }
+
+        function closeOverlay() {
+            const overlay = document.getElementById('productOverlay');
+            overlay.classList.remove('open');
+            document.body.classList.remove('no-scroll');
+            setTimeout(() => {
+                overlayProduct = null;
+            }, 400);
+        }
+
+        document.getElementById('overlayClose').addEventListener('click', closeOverlay);
+        document.getElementById('productOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeOverlay();
+        });
+
+        document.getElementById('overlayAddBtn').addEventListener('click', function() {
+            if (!overlayProduct) return;
+
+            const item = overlayProduct;
+            const size = overlaySelectedSize;
+            const cartKey = getCartKey(item.id, size);
+            const qty = overlayQty;
+
+            if (cart[cartKey]) {
+                cart[cartKey].quantity += qty;
+            } else {
+                cart[cartKey] = {
+                    ...item,
+                    quantity: qty,
+                    size: size,
+                    price: getProductPrice(item, size),
+                    sizeLabel: getSizeLabel(item, size)
+                };
+            }
+
+            selectedSizeCache[item.id] = size;
+            saveCart();
+            updateUI();
+            updateOverlayButton();
+            closeOverlay();
+        });
+
+        // ============================================================
         //  ТАБЫ
         // ============================================================
         document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -1850,11 +2271,11 @@
         // ============================================================
         //  КОРЗИНА — ОТКРЫТИЕ / ЗАКРЫТИЕ
         // ============================================================
-        const overlay = document.getElementById('cartOverlay');
+        const cartOverlay = document.getElementById('cartOverlay');
         const body = document.body;
 
         document.getElementById('cartToggle').addEventListener('click', () => {
-            overlay.classList.add('open');
+            cartOverlay.classList.add('open');
             body.classList.add('no-scroll');
             renderCartItems();
             document.getElementById('cartModalTotal').textContent = getTotalPrice() + ' ₽';
@@ -1863,13 +2284,13 @@
         });
 
         document.getElementById('cartClose').addEventListener('click', () => {
-            overlay.classList.remove('open');
+            cartOverlay.classList.remove('open');
             body.classList.remove('no-scroll');
         });
 
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                overlay.classList.remove('open');
+        cartOverlay.addEventListener('click', (e) => {
+            if (e.target === cartOverlay) {
+                cartOverlay.classList.remove('open');
                 body.classList.remove('no-scroll');
             }
         });
@@ -2007,7 +2428,7 @@
                 renderCartItems();
                 document.getElementById('orderForm').reset();
                 setTimeout(() => {
-                    overlay.classList.remove('open');
+                    cartOverlay.classList.remove('open');
                     body.classList.remove('no-scroll');
                 }, 2000);
             } else {
